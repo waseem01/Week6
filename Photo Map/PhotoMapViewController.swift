@@ -9,7 +9,8 @@
 import UIKit
 import MapKit
 
-class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate,LocationsViewControllerDelegate {
+class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate,
+UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
 
@@ -21,10 +22,12 @@ class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate, 
         super.viewDidLoad()
         let sfRegion = MKCoordinateRegionMake(CLLocationCoordinate2DMake(37.783333, -122.416667), MKCoordinateSpanMake(0.1, 0.1))
         mapView.setRegion(sfRegion, animated: false)
+        mapView.delegate = self
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTapCamera))
-        
         cameraButton.addGestureRecognizer(tap)
+
+
     
         // Do any additional setup after loading the view.
     }
@@ -76,11 +79,33 @@ class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate, 
         
         let sfRegion = MKCoordinateRegionMake(CLLocationCoordinate2DMake(CLLocationDegrees(latitude), CLLocationDegrees(longitude)), MKCoordinateSpanMake(0.1, 0.1))
         mapView.setRegion(sfRegion, animated: false)
+
+        let coordinate = CLLocationCoordinate2DMake(CLLocationDegrees(latitude), CLLocationDegrees(longitude))
+
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        annotation.title = "Picture!"
+        mapView.addAnnotation(annotation)
         
-        self.navigationController?.popToViewController(controller, animated: true)
+        self.navigationController?.popToViewController(self, animated: true)
         
 
     }
-    
+
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuseID = "myAnnotationView"
+
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseID)
+        if (annotationView == nil) {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+            annotationView!.canShowCallout = true
+            annotationView!.leftCalloutAccessoryView = UIImageView(frame: CGRect(x:0, y:0, width: 50, height:50))
+        }
+
+        let imageView = annotationView?.leftCalloutAccessoryView as! UIImageView
+        imageView.image = UIImage(named: "camera")
+        
+        return annotationView
+    }
 
 }
