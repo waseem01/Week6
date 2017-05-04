@@ -45,6 +45,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="aPF-0T-Ydb"/>
                     <connections>
+                        <outlet property="cameraButton" destination="zE6-1S-Ev1" id="Q3W-wQ-21w"/>
                         <outlet property="mapView" destination="OYn-ZZ-dKd" id="j9P-Eg-Hnu"/>
                         <segue destination="eZf-Nb-6PU" kind="push" identifier="tagSegue" id="Tzv-N2-17x"/>
                         <segue destination="WeT-38-qba" kind="push" identifier="fullImageSegue" id="B5X-dM-HfZ"/>
