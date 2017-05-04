@@ -9,6 +9,8 @@
 import UIKit
 import MapKit
 
+
+
 class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate,
 UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegate {
 
@@ -18,6 +20,8 @@ UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegat
     
     
     var editedImage: UIImage?
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,9 +50,23 @@ UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegat
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
-        let controller = segue.destination as! LocationsViewController
+       
         
-        controller.delegate=self
+        
+       
+        
+        if segue.identifier == "fullImageSegue" {
+                let controller = segue.destination as! FullImageViewController
+            
+             controller.fullImageView.image = editedImage
+            
+        }else {
+             let controller = segue.destination as! LocationsViewController
+            
+            controller.delegate=self
+
+        }
+        
         
     }
     
@@ -105,6 +123,7 @@ UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegat
 
         var imageView = annotationView?.leftCalloutAccessoryView as! UIImageView
         
+        annotationView?.rightCalloutAccessoryView = UIButton(type: .infoLight) as UIView
         
         
         var resizeRenderImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 45, height: 45))
@@ -121,5 +140,12 @@ UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegat
         
         return annotationView
     }
+    
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+       performSegue(withIdentifier: "fullImageSegue", sender: self)
+    }
+    
+
 
 }

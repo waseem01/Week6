@@ -8,11 +8,20 @@
 
 import UIKit
 
+
+
 class FullImageViewController: UIViewController {
 
+    
+    @IBOutlet weak var fullImageView: UIImageView!
+    
+    var tempImage:UIImageView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+ 
+        fullImageView.image=tempImage?.image
+        
         // Do any additional setup after loading the view.
     }
 
