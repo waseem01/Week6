@@ -9,11 +9,13 @@
 import UIKit
 import MapKit
 
-class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate,LocationsViewControllerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
 
     @IBOutlet weak var cameraButton: UIImageView!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +42,10 @@ class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate, 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        let controller = segue.destination as! LocationsViewController
+        
+        controller.delegate=self
+        
     }
     
     func onTapCamera(){
@@ -65,7 +71,16 @@ class PhotoMapViewController: UIViewController,UIImagePickerControllerDelegate, 
             self.performSegue(withIdentifier: "tagSegue", sender: self)
         }
     }
+    
+    func locationsPickedLocation(controller: LocationsViewController, latitude: NSNumber, longitude: NSNumber) {
+        
+        let sfRegion = MKCoordinateRegionMake(CLLocationCoordinate2DMake(CLLocationDegrees(latitude), CLLocationDegrees(longitude)), MKCoordinateSpanMake(0.1, 0.1))
+        mapView.setRegion(sfRegion, animated: false)
+        
+        self.navigationController?.popToViewController(controller, animated: true)
+        
 
+    }
     
 
 }
