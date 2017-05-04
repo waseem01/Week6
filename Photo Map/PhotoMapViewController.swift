@@ -17,6 +17,7 @@ UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegat
     @IBOutlet weak var cameraButton: UIImageView!
     
     
+    var editedImage: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +65,7 @@ UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegat
                                didFinishPickingMediaWithInfo info: [String : Any]) {
         // Get the image captured by the UIImagePickerController
         let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
+        editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
         
         // Do something with the images (based on your use case)
         
@@ -102,8 +103,21 @@ UINavigationControllerDelegate,LocationsViewControllerDelegate, MKMapViewDelegat
             annotationView!.leftCalloutAccessoryView = UIImageView(frame: CGRect(x:0, y:0, width: 50, height:50))
         }
 
-        let imageView = annotationView?.leftCalloutAccessoryView as! UIImageView
-        imageView.image = UIImage(named: "camera")
+        var imageView = annotationView?.leftCalloutAccessoryView as! UIImageView
+        
+        
+        
+        var resizeRenderImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 45, height: 45))
+        resizeRenderImageView.layer.borderColor = UIColor.white.cgColor
+        resizeRenderImageView.layer.borderWidth = 3.0
+        resizeRenderImageView.contentMode = .scaleAspectFit
+        resizeRenderImageView.image = editedImage
+        
+        UIGraphicsBeginImageContext(resizeRenderImageView.frame.size)
+        resizeRenderImageView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        var thumbnail = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        imageView.image = thumbnail
         
         return annotationView
     }
